@@ -1,1 +1,0 @@
-../../sonic-platform-modules-bfn-montara/sonic_platform/fan_drawer.py

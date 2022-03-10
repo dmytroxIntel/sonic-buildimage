@@ -307,7 +307,7 @@ class Iface(object):
         """
         pass
 
-    def pltfm_mgr_chss_mgmt_bmc_ver_get(self):
+    def pltfm_mgr_chss_mgmt_bmc_get(self):
         pass
 
 
@@ -1574,18 +1574,18 @@ class Client(Iface):
             raise result.ouch
         raise TApplicationException(TApplicationException.MISSING_RESULT, "pltfm_mgr_sensor_info_get failed: unknown result")
 
-    def pltfm_mgr_chss_mgmt_bmc_ver_get(self):
-        self.send_pltfm_mgr_chss_mgmt_bmc_ver_get()
-        return self.recv_pltfm_mgr_chss_mgmt_bmc_ver_get()
+    def pltfm_mgr_chss_mgmt_bmc_get(self):
+        self.send_pltfm_mgr_chss_mgmt_bmc_get()
+        return self.recv_pltfm_mgr_chss_mgmt_bmc_get()
 
-    def send_pltfm_mgr_chss_mgmt_bmc_ver_get(self):
-        self._oprot.writeMessageBegin('pltfm_mgr_chss_mgmt_bmc_ver_get', TMessageType.CALL, self._seqid)
-        args = pltfm_mgr_chss_mgmt_bmc_ver_get_args()
+    def send_pltfm_mgr_chss_mgmt_bmc_get(self):
+        self._oprot.writeMessageBegin('pltfm_mgr_chss_mgmt_bmc_get', TMessageType.CALL, self._seqid)
+        args = pltfm_mgr_chss_mgmt_bmc_get_args()
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
 
-    def recv_pltfm_mgr_chss_mgmt_bmc_ver_get(self):
+    def recv_pltfm_mgr_chss_mgmt_bmc_get(self):
         iprot = self._iprot
         (fname, mtype, rseqid) = iprot.readMessageBegin()
         if mtype == TMessageType.EXCEPTION:
@@ -1593,14 +1593,14 @@ class Client(Iface):
             x.read(iprot)
             iprot.readMessageEnd()
             raise x
-        result = pltfm_mgr_chss_mgmt_bmc_ver_get_result()
+        result = pltfm_mgr_chss_mgmt_bmc_get_result()
         result.read(iprot)
         iprot.readMessageEnd()
         if result.success is not None:
             return result.success
         if result.ouch is not None:
             raise result.ouch
-        raise TApplicationException(TApplicationException.MISSING_RESULT, "pltfm_mgr_chss_mgmt_bmc_ver_get failed: unknown result")
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "pltfm_mgr_chss_mgmt_bmc_get failed: unknown result")
 
 
 class Processor(Iface, TProcessor):
@@ -1644,7 +1644,7 @@ class Processor(Iface, TProcessor):
         self._processMap["pltfm_mgr_qsfp_pwr_override_set"] = Processor.process_pltfm_mgr_qsfp_pwr_override_set
         self._processMap["pltfm_mgr_qsfp_lpmode_set"] = Processor.process_pltfm_mgr_qsfp_lpmode_set
         self._processMap["pltfm_mgr_sensor_info_get"] = Processor.process_pltfm_mgr_sensor_info_get
-        self._processMap["pltfm_mgr_chss_mgmt_bmc_ver_get"] = Processor.process_pltfm_mgr_chss_mgmt_bmc_ver_get
+        self._processMap["pltfm_mgr_chss_mgmt_bmc_get"] = Processor.process_pltfm_mgr_chss_mgmt_bmc_get
         self._on_message_begin = None
 
     def on_message_begin(self, func):
@@ -2626,13 +2626,13 @@ class Processor(Iface, TProcessor):
         oprot.writeMessageEnd()
         oprot.trans.flush()
 
-    def process_pltfm_mgr_chss_mgmt_bmc_ver_get(self, seqid, iprot, oprot):
-        args = pltfm_mgr_chss_mgmt_bmc_ver_get_args()
+    def process_pltfm_mgr_chss_mgmt_bmc_get(self, seqid, iprot, oprot):
+        args = pltfm_mgr_chss_mgmt_bmc_get_args()
         args.read(iprot)
         iprot.readMessageEnd()
-        result = pltfm_mgr_chss_mgmt_bmc_ver_get_result()
+        result = pltfm_mgr_chss_mgmt_bmc_get_result()
         try:
-            result.success = self._handler.pltfm_mgr_chss_mgmt_bmc_ver_get()
+            result.success = self._handler.pltfm_mgr_chss_mgmt_bmc_get()
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -2647,7 +2647,7 @@ class Processor(Iface, TProcessor):
             logging.exception('Unexpected exception in handler')
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("pltfm_mgr_chss_mgmt_bmc_ver_get", msg_type, seqid)
+        oprot.writeMessageBegin("pltfm_mgr_chss_mgmt_bmc_get", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -3815,6 +3815,324 @@ class pltfm_mgr_fan_info_get_result(object):
 all_structs.append(pltfm_mgr_fan_info_get_result)
 pltfm_mgr_fan_info_get_result.thrift_spec = (
     (0, TType.STRUCT, 'success', [pltfm_mgr_fan_info_t, None], None, ),  # 0
+    (1, TType.STRUCT, 'ouch', [InvalidPltfmMgrOperation, None], None, ),  # 1
+)
+
+
+class pltfm_mgr_qsfp_cached_num_bytes_get_args(object):
+    """
+    Attributes:
+     - port_num
+     - page
+     - offset
+     - length
+
+    """
+
+
+    def __init__(self, port_num=None, page=None, offset=None, length=None,):
+        self.port_num = port_num
+        self.page = page
+        self.offset = offset
+        self.length = length
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.I32:
+                    self.port_num = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I32:
+                    self.page = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.I32:
+                    self.offset = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.I32:
+                    self.length = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('pltfm_mgr_qsfp_cached_num_bytes_get_args')
+        if self.port_num is not None:
+            oprot.writeFieldBegin('port_num', TType.I32, 1)
+            oprot.writeI32(self.port_num)
+            oprot.writeFieldEnd()
+        if self.page is not None:
+            oprot.writeFieldBegin('page', TType.I32, 2)
+            oprot.writeI32(self.page)
+            oprot.writeFieldEnd()
+        if self.offset is not None:
+            oprot.writeFieldBegin('offset', TType.I32, 3)
+            oprot.writeI32(self.offset)
+            oprot.writeFieldEnd()
+        if self.length is not None:
+            oprot.writeFieldBegin('length', TType.I32, 4)
+            oprot.writeI32(self.length)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(pltfm_mgr_qsfp_cached_num_bytes_get_args)
+pltfm_mgr_qsfp_cached_num_bytes_get_args.thrift_spec = (
+    None,  # 0
+    (1, TType.I32, 'port_num', None, None, ),  # 1
+    (2, TType.I32, 'page', None, None, ),  # 2
+    (3, TType.I32, 'offset', None, None, ),  # 3
+    (4, TType.I32, 'length', None, None, ),  # 4
+)
+
+
+class pltfm_mgr_qsfp_cached_num_bytes_get_result(object):
+    """
+    Attributes:
+     - success
+     - ouch
+
+    """
+
+
+    def __init__(self, success=None, ouch=None,):
+        self.success = success
+        self.ouch = ouch
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.STRING:
+                    self.success = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.ouch = InvalidPltfmMgrOperation.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('pltfm_mgr_qsfp_cached_num_bytes_get_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.STRING, 0)
+            oprot.writeString(self.success.encode('utf-8') if sys.version_info[0] == 2 else self.success)
+            oprot.writeFieldEnd()
+        if self.ouch is not None:
+            oprot.writeFieldBegin('ouch', TType.STRUCT, 1)
+            self.ouch.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(pltfm_mgr_qsfp_cached_num_bytes_get_result)
+pltfm_mgr_qsfp_cached_num_bytes_get_result.thrift_spec = (
+    (0, TType.STRING, 'success', 'UTF8', None, ),  # 0
+    (1, TType.STRUCT, 'ouch', [InvalidPltfmMgrOperation, None], None, ),  # 1
+)
+
+
+class pltfm_mgr_qsfp_cached_page_get_args(object):
+    """
+    Attributes:
+     - port_num
+     - page
+
+    """
+
+
+    def __init__(self, port_num=None, page=None,):
+        self.port_num = port_num
+        self.page = page
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.I32:
+                    self.port_num = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I32:
+                    self.page = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('pltfm_mgr_qsfp_cached_page_get_args')
+        if self.port_num is not None:
+            oprot.writeFieldBegin('port_num', TType.I32, 1)
+            oprot.writeI32(self.port_num)
+            oprot.writeFieldEnd()
+        if self.page is not None:
+            oprot.writeFieldBegin('page', TType.I32, 2)
+            oprot.writeI32(self.page)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(pltfm_mgr_qsfp_cached_page_get_args)
+pltfm_mgr_qsfp_cached_page_get_args.thrift_spec = (
+    None,  # 0
+    (1, TType.I32, 'port_num', None, None, ),  # 1
+    (2, TType.I32, 'page', None, None, ),  # 2
+)
+
+
+class pltfm_mgr_qsfp_cached_page_get_result(object):
+    """
+    Attributes:
+     - success
+     - ouch
+
+    """
+
+
+    def __init__(self, success=None, ouch=None,):
+        self.success = success
+        self.ouch = ouch
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.STRING:
+                    self.success = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
+                if ftype == TType.STRUCT:
+                    self.ouch = InvalidPltfmMgrOperation.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('pltfm_mgr_qsfp_cached_page_get_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.STRING, 0)
+            oprot.writeString(self.success.encode('utf-8') if sys.version_info[0] == 2 else self.success)
+            oprot.writeFieldEnd()
+        if self.ouch is not None:
+            oprot.writeFieldBegin('ouch', TType.STRUCT, 1)
+            self.ouch.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(pltfm_mgr_qsfp_cached_page_get_result)
+pltfm_mgr_qsfp_cached_page_get_result.thrift_spec = (
+    (0, TType.STRING, 'success', 'UTF8', None, ),  # 0
     (1, TType.STRUCT, 'ouch', [InvalidPltfmMgrOperation, None], None, ),  # 1
 )
 
@@ -7470,7 +7788,7 @@ pltfm_mgr_sensor_info_get_result.thrift_spec = (
 )
 
 
-class pltfm_mgr_chss_mgmt_bmc_ver_get_args(object):
+class pltfm_mgr_chss_mgmt_bmc_get_args(object):
 
 
     def read(self, iprot):
@@ -7491,7 +7809,7 @@ class pltfm_mgr_chss_mgmt_bmc_ver_get_args(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('pltfm_mgr_chss_mgmt_bmc_ver_get_args')
+        oprot.writeStructBegin('pltfm_mgr_chss_mgmt_bmc_get_args')
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -7508,12 +7826,12 @@ class pltfm_mgr_chss_mgmt_bmc_ver_get_args(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(pltfm_mgr_chss_mgmt_bmc_ver_get_args)
-pltfm_mgr_chss_mgmt_bmc_ver_get_args.thrift_spec = (
+all_structs.append(pltfm_mgr_chss_mgmt_bmc_get_args)
+pltfm_mgr_chss_mgmt_bmc_get_args.thrift_spec = (
 )
 
 
-class pltfm_mgr_chss_mgmt_bmc_ver_get_result(object):
+class pltfm_mgr_chss_mgmt_bmc_get_result(object):
     """
     Attributes:
      - success
@@ -7554,7 +7872,7 @@ class pltfm_mgr_chss_mgmt_bmc_ver_get_result(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('pltfm_mgr_chss_mgmt_bmc_ver_get_result')
+        oprot.writeStructBegin('pltfm_mgr_chss_mgmt_bmc_get_result')
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.STRING, 0)
             oprot.writeString(self.success.encode('utf-8') if sys.version_info[0] == 2 else self.success)
@@ -7579,8 +7897,8 @@ class pltfm_mgr_chss_mgmt_bmc_ver_get_result(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(pltfm_mgr_chss_mgmt_bmc_ver_get_result)
-pltfm_mgr_chss_mgmt_bmc_ver_get_result.thrift_spec = (
+all_structs.append(pltfm_mgr_chss_mgmt_bmc_get_result)
+pltfm_mgr_chss_mgmt_bmc_get_result.thrift_spec = (
     (0, TType.STRING, 'success', 'UTF8', None, ),  # 0
     (1, TType.STRUCT, 'ouch', [InvalidPltfmMgrOperation, None], None, ),  # 1
 )
