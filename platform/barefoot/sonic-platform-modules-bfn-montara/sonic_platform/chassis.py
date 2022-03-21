@@ -13,8 +13,9 @@ try:
     from sonic_platform.psu import psu_list_get
     from sonic_platform.fan_drawer import fan_drawer_list_get
     from sonic_platform.thermal import thermal_list_get
-    from platform_utils import file_create
-    from eeprom import Eeprom
+    from sonic_platform.platform_utils import file_create
+    from sonic_platform.eeprom import Eeprom
+    from sonic_platform.component import Components
 
     from sonic_platform.platform_thrift_client import pltfm_mgr_ready
     from sonic_platform.platform_thrift_client import thrift_try
@@ -23,16 +24,6 @@ try:
 
 except ImportError as e:
     raise ImportError(str(e) + "- required module not found")
-
-try:
-    from thrift.Thrift import TApplicationException
-
-    def newport_onie_sys_eeprom_get(client):
-        return client.pltfm_mgr.pltfm_mgr_newport_onie_sys_eeprom_get()
-    thrift_try(newport_onie_sys_eeprom_get, 1)
-    NEWPORT_ONIE_SYS_EEPROM_API_SUPPORT = True
-except TApplicationException as e:
-    NEWPORT_ONIE_SYS_EEPROM_API_SUPPORT = False
 
 NUM_COMPONENT = 2
 class Chassis(ChassisBase):
@@ -50,7 +41,9 @@ class Chassis(ChassisBase):
     def __init__(self):
         ChassisBase.__init__(self)
 
-        self.__eeprom = None
+        self._eeprom = Eeprom()
+        self.__tlv_bin_eeprom, self.__tlv_dict_eeprom = self._eeprom.get_contents()
+
         self.__fan_drawers = None
         self.__fan_list = None
         self.__thermals = None
@@ -66,17 +59,6 @@ class Chassis(ChassisBase):
             config_dict = yaml.load(f, yaml.SafeLoader)
             file_create(config_dict['handlers']['file']['filename'], '646')
             logging.config.dictConfig(config_dict)
-
-    @property
-    def _eeprom(self):
-        if self.__eeprom is None:
-            isNewport = device_info.get_platform() in ["x86_64-accton_as9516_32d-r0", "x86_64-accton_as9516bf_32d-r0"]
-            self.__eeprom = OnieEeprom() if isNewport and NEWPORT_ONIE_SYS_EEPROM_API_SUPPORT else BmcEeprom()
-        return self.__eeprom
-
-    @_eeprom.setter
-    def _eeprom(self, value):
-        pass
 
     @property
     def _fan_drawer_list(self):
@@ -163,7 +145,7 @@ class Chassis(ChassisBase):
         Returns:
             string: The name of the chassis
         """
-        return self._eeprom.modelstr()
+        return self._eeprom.modelstr(self.__tlv_bin_eeprom)
 
     def get_presence(self):
         """
@@ -179,7 +161,7 @@ class Chassis(ChassisBase):
         Returns:
             string: Model/part number of chassis
         """
-        return self._eeprom.part_number_str()
+        return self._eeprom.part_number_str(self.__tlv_bin_eeprom)
 
     def get_serial(self):
         """
@@ -187,7 +169,7 @@ class Chassis(ChassisBase):
         Returns:
             string: Serial number of chassis
         """
-        return self._eeprom.serial_number_str()
+        return self._eeprom.serial_number_str(self.__tlv_bin_eeprom)
 
     def get_revision(self):
         """
@@ -195,7 +177,7 @@ class Chassis(ChassisBase):
         Returns:
             string: Revision number of chassis
         """
-        return self._eeprom.revision_str()
+        return self.__tlv_dict_eeprom.get("0x{:X}".format(Eeprom._TLV_CODE_LABEL_REVISION), 'N/A')
 
     def get_sfp(self, index):
         """
@@ -236,7 +218,7 @@ class Chassis(ChassisBase):
             A string containing the MAC address in the format
             'XX:XX:XX:XX:XX:XX'
         """
-        return self._eeprom.base_mac_addr()
+        return self._eeprom.base_mac_addr(self.__tlv_bin_eeprom)
 
     def get_system_eeprom_info(self):
         """
@@ -247,7 +229,7 @@ class Chassis(ChassisBase):
             OCP ONIE TlvInfo EEPROM format and values are their corresponding
             values.
         """
-        return self._eeprom.system_eeprom_info()
+        return self.__tlv_dict_eeprom
 
     def __get_transceiver_change_event(self, timeout=0):
         forever = False

@@ -7,7 +7,6 @@ try:
     import logging.config
     import yaml
     import re
-    from io import BytesIO
 
     sys.path.append(os.path.dirname(__file__))
 
@@ -19,9 +18,10 @@ try:
     from sonic_platform_base.sonic_eeprom import eeprom_base
     from sonic_platform_base.sonic_eeprom import eeprom_tlvinfo
 
-    from platform_thrift_client import thrift_try
     from sonic_py_common import device_info
-    from platform_utils import file_create
+
+    from sonic_platform.platform_thrift_client import thrift_try
+    from sonic_platform.platform_utils import file_create
 
 except ImportError as e:
     raise ImportError (str(e) + "- required module not found")

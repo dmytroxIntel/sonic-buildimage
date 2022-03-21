@@ -478,7 +478,7 @@ class pltfm_mgr_eeprom_t(object):
         return not (self == other)
 
 
-class pltfm_mgr_newport_onie_eeprom_t(object):
+class pltfm_mgr_tlv_sys_eeprom_t(object):
     """
     Attributes:
      - raw_content_hex
@@ -512,7 +512,7 @@ class pltfm_mgr_newport_onie_eeprom_t(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('pltfm_mgr_newport_onie_eeprom_t')
+        oprot.writeStructBegin('pltfm_mgr_tlv_sys_eeprom_t')
         if self.raw_content_hex is not None:
             oprot.writeFieldBegin('raw_content_hex', TType.STRING, 1)
             oprot.writeString(self.raw_content_hex.encode('utf-8') if sys.version_info[0] == 2 else self.raw_content_hex)
@@ -1455,8 +1455,8 @@ pltfm_mgr_eeprom_t.thrift_spec = (
     (21, TType.STRING, 'location', 'UTF8', None, ),  # 21
     (22, TType.I16, 'crc8', None, None, ),  # 22
 )
-all_structs.append(pltfm_mgr_newport_onie_eeprom_t)
-pltfm_mgr_newport_onie_eeprom_t.thrift_spec = (
+all_structs.append(pltfm_mgr_tlv_sys_eeprom_t)
+pltfm_mgr_tlv_sys_eeprom_t.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'raw_content_hex', 'UTF8', None, ),  # 1
 )
