@@ -15,7 +15,6 @@ try:
     from sonic_platform.thermal import thermal_list_get
     from sonic_platform.platform_utils import file_create
     from sonic_platform.eeprom import Eeprom
-    from sonic_platform.component import Components
 
     from sonic_platform.platform_thrift_client import pltfm_mgr_ready
     from sonic_platform.platform_thrift_client import thrift_try
@@ -42,7 +41,8 @@ class Chassis(ChassisBase):
         ChassisBase.__init__(self)
 
         self._eeprom = Eeprom()
-        self.__tlv_bin_eeprom, self.__tlv_dict_eeprom = self._eeprom.get_contents()
+        self.__tlv_bin_eeprom = self._eeprom.get_raw_data()
+        self.__tlv_dict_eeprom = self._eeprom.get_data()
 
         self.__fan_drawers = None
         self.__fan_list = None
@@ -177,7 +177,8 @@ class Chassis(ChassisBase):
         Returns:
             string: Revision number of chassis
         """
-        return self.__tlv_dict_eeprom.get("0x{:X}".format(Eeprom._TLV_CODE_LABEL_REVISION), 'N/A')
+        return self.__tlv_dict_eeprom.get(
+            "0x{:X}".format(Eeprom._TLV_CODE_LABEL_REVISION), 'N/A')
 
     def get_sfp(self, index):
         """
