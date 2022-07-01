@@ -1,0 +1,2 @@
+/sonic/platform/barefoot/sonic-platform-modules-bfn-newport/modules/bf_fpga_main.o /sonic/platform/barefoot/sonic-platform-modules-bfn-newport/modules/bf_fpga_ioctl.o /sonic/platform/barefoot/sonic-platform-modules-bfn-newport/modules/bf_fpga_sysfs.o /sonic/platform/barefoot/sonic-platform-modules-bfn-newport/modules/i2c/bf_fpga_i2c.o /sonic/platform/barefoot/sonic-platform-modules-bfn-newport/modules/i2c/bf_fpga_i2c_ctrl.o /sonic/platform/barefoot/sonic-platform-modules-bfn-newport/modules/i2c/bf_fpga_i2c_porting.o
+
